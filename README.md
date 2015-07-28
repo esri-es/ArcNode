@@ -167,14 +167,14 @@ service.addLayerToFS({
 ```
 ----------------
 ### Create a JSON object describing a layer
-**Description**:  <br>
-**Return**: a [deferred](http://dojotoolkit.org/reference-guide/1.10/dojo/Deferred.html) object. When it's resolved: .<br> 
+**Description**:  this method returns a JSON object with a quite simple layer definition<br>
+**Return**: a <a href="http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r300000230000000#GUID-63F2BD08-DCF4-485D-A3E6-C7116E17DDD8">JSON defining a layer</a>.<br> 
 **Example**: [See full example](https://github.com/esri-es/ArcNode/tree/master/examples)
 
 <table>
 <tr>
   <td><strong>Name</strong></td>
-  <td>(options?)</td>
+  <td>createLayer(options?)</td>
 </tr>
 <tr>
   <td><strong>Options</strong><br>(JSON object)</td>
@@ -187,10 +187,16 @@ service.addLayerToFS({
       <td><strong>Description</strong></td>
     </tr>
     <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>layerName</td>
+      <td>String</td>
+      <td>No</td>
+      <td>Name that we want to assign to the layer</td>
+    </tr>
+    <tr>
+      <td>fields</td>
+      <td>Array of objects</td>
+      <td>No</td>
+      <td>Array defining all fields available (<a href="http://resources.arcgis.com/en/help/sds/rest/index.html?featureServiceObject.html">check on this sample</a>)</td>
     </tr>
     </table>
   </td>
@@ -199,11 +205,32 @@ service.addLayerToFS({
 
 **How to use it**
 ```javascript
-service
-  
-}, function(e){
-  console.log("Error: ", e);
+fields = [{
+    "name": "OBJECTID",
+    "type": "esriFieldTypeOID",
+    "alias": "OBJECTID",
+    "sqlType": "sqlTypeOther",
+    "nullable": false,
+    "editable": false,
+    "domain": null,
+    "defaultValue": null
+  },{
+    "name": "Name",
+    "type": "esriFieldTypeString",
+    "alias": "Your name",
+    "sqlType": service.esriToSqlType('esriFieldTypeString'),
+    "nullable": false,
+    "editable": false,
+    "domain": null,
+    "defaultValue": null,
+    "length": 255
+}];
+
+layer = service.createLayer({
+    layerName: "My new layer",
+    fields: fields
 });
+console.log("layer = ", layer);
 ```
 ----------------
 ### Determine the SQL type for an EsriType
