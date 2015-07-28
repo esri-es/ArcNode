@@ -2,7 +2,7 @@
 Node module to work with ArcGIS Online and ArcGIS Server.
 
 Available methods to:
-* Update token
+* [Update token](#update-token)
 * Check if a feature service exists
 * Create an empty feature service
 * Add a layer to a feature service**addLayerToFS**
