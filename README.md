@@ -3,12 +3,12 @@ Node module to work with ArcGIS Online and ArcGIS Server.
 
 Available methods to:
 * [Update token](#update-token)
-* Check if a feature service exists
-* Create an empty feature service
-* Add a layer to a feature service**addLayerToFS**
-* Create a JSON object describing a layer
-* Determine the SQL type for an EsriType
-* Add features to a layer
+* [Check if a feature service exists](#check-if-a-feature-service-exists)
+* [Create an empty feature service](#create-an-empty-feature-service)
+* [Add a layer to a feature service](#add-a-layer-to-a-feature-service)
+* [Create a JSON object describing a layer](#create-a-json-object-describing-a-layer)
+* [Determine the SQL type for an EsriType](#determine-the-sql-type-for-an-esritype)
+* [Add features to a layer](#add-features-to-a-layer)
 
 ## Documentation
 
@@ -76,7 +76,7 @@ service.checkIfFSExists( { serviceName: "Service name" } ).then(function(availab
 ----------------
 ### Create an empty feature service
 ----------------
-### Add a layer to a feature service**addLayerToFS**
+### Add a layer to a feature service**
 ----------------
 ### Create a JSON object describing a layer
 ----------------
