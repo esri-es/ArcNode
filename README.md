@@ -76,7 +76,7 @@ service.checkIfFSExists( { serviceName: "Service name" } ).then(function(availab
 ----------------
 ### Create an empty feature service
 ----------------
-### Add a layer to a feature service**
+### Add a layer to a feature service
 ----------------
 ### Create a JSON object describing a layer
 ----------------
