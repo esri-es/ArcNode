@@ -48,16 +48,19 @@ service.updateToken().then(function(token){
   <td>checkIfFSExists(options?)</td>
 </tr>
 <tr>
-  <td><strong>Parameters</strong></td>
+  <td><strong>Options</strong><br>(JSON object)</td>
   <td>
-    JSON object.
     <table>
     <tr>
-      <td>Name</td><td>Type</td><td>Description</td>
+      <td><strong>Name</strong></td>
+      <td><strong>Type</strong></td>
+      <td><strong>Required?</strong></td>
+      <td><strong>Description</strong></td>
     </tr>
     <tr>
-      <td><strong>serviceName</strong></td>
+      <td>serviceName</td>
       <td>String</td>
+      <td>Yes</td>
       <td>Name of the service</td>
     </tr>
     </table>
