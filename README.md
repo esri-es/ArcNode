@@ -11,7 +11,7 @@ And you are ready to use it like this:
 var ArcNode = require('arc-node'),
     service = new ArcNode(<config object>);
 ```
-Check here the description of the *[\<config object\>](/master/examples/config.json.sample)* parameter.
+Check here the description of the *[\<config object\>](/examples/config.json.sample)* parameter.
 
 ## Documentation
 When you have instanciate the service you will have available methods to:
