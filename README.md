@@ -1,7 +1,20 @@
 # ArcNode
 Node module to work with ArcGIS Online and ArcGIS Server.
 
-Available methods to:
+## How to install it
+
+Just write this in your prompt:
+```npm install --save arc-node```
+
+And you are ready to use it like this:
+```javascript
+var ArcNode = require('arc-node'),
+    service = new ArcNode(<config object>);
+```
+Check here the description of the *[\<config object\>](/master/examples/config.json.sample)* parameter.
+
+## Documentation
+When you have instanciate the service you will have available methods to:
 * [Update token](#update-token)
 * [Check if a feature service exists](#check-if-a-feature-service-exists)
 * [Create an empty feature service](#create-an-empty-feature-service)
@@ -9,8 +22,6 @@ Available methods to:
 * [Create a JSON object describing a layer](#create-a-json-object-describing-a-layer)
 * [Determine the SQL type for an EsriType](#determine-the-sql-type-for-an-esritype)
 * [Add features to a layer](#add-features-to-a-layer)
-
-## Documentation
 
 ### Update token
 **Description**: Gets a new token valid for 15 days <br>
@@ -234,17 +245,17 @@ console.log("layer = ", layer);
 ```
 ----------------
 ### Determine the SQL type for an EsriType
-**Description**:  <br>
-**Return**: a [deferred](http://dojotoolkit.org/reference-guide/1.10/dojo/Deferred.html) object. When it's resolved: .<br> 
+**Description**: translate an EsriType (esriFieldTypeString, esriFieldTypeDouble and esriFieldTypeInteger) to SQL Types, needed to created new fields when defining a new layer<br>
+**Return**: a string width the sqlType.<br> 
 **Example**: [See full example](https://github.com/esri-es/ArcNode/tree/master/examples)
 
 <table>
 <tr>
   <td><strong>Name</strong></td>
-  <td>(options?)</td>
+  <td>esriToSqlType(esriType)</td>
 </tr>
 <tr>
-  <td><strong>Options</strong><br>(JSON object)</td>
+  <td><strong>Parameters</strong><br></td>
   <td>
     <table>
     <tr>
@@ -254,10 +265,10 @@ console.log("layer = ", layer);
       <td><strong>Description</strong></td>
     </tr>
     <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>esriType</td>
+      <td>String</td>
+      <td>Yes</td>
+      <td>It returns: sqlTypeVarchar, sqlTypeDecimal, sqlTypeInteger or sqlTypeOther depending of the esriType</td>
     </tr>
     </table>
   </td>
@@ -266,22 +277,19 @@ console.log("layer = ", layer);
 
 **How to use it**
 ```javascript
-service
-  
-}, function(e){
-  console.log("Error: ", e);
-});
+var sqlType = service.esriToSqlType('esriFieldTypeString');
+console.log("sqlType = ", sqlType);
 ```
 ----------------
 ### Add features to a layer
-**Description**:  <br>
-**Return**: a [deferred](http://dojotoolkit.org/reference-guide/1.10/dojo/Deferred.html) object. When it's resolved: .<br> 
+**Description**:  add features to a new layer<br>
+**Return**: a [deferred](http://dojotoolkit.org/reference-guide/1.10/dojo/Deferred.html) object. When it's resolved: it return de [ArcGIS API REST response](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#/Add_Features/02r30000010m000000/#GUID-6EDF1F16-5716-4B4D-9975-47FEA30AA359).<br> 
 **Example**: [See full example](https://github.com/esri-es/ArcNode/tree/master/examples)
 
 <table>
 <tr>
   <td><strong>Name</strong></td>
-  <td>(options?)</td>
+  <td>addFeatures(options?)</td>
 </tr>
 <tr>
   <td><strong>Options</strong><br>(JSON object)</td>
@@ -294,10 +302,22 @@ service
       <td><strong>Description</strong></td>
     </tr>
     <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
+      <td>serviceName</td>
+      <td>String</td>
+      <td>Yes</td>
+      <td>Service name where the layer is hosted</td>
+    </tr>
+    <tr>
+      <td>layer</td>
+      <td>Integer</td>
+      <td>Yes</td>
+      <td>Layer index where the features want to be added</td>
+    </tr>
+    <tr>
+      <td>features</td>
+      <td>Array of features</td>
+      <td>Yes</td>
+      <td>Array of <a href="http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r3000000n8000000">features objects</a></td>
     </tr>
     </table>
   </td>
@@ -306,9 +326,27 @@ service
 
 **How to use it**
 ```javascript
-service
-  
-}, function(e){
-  console.log("Error: ", e);
+var data = [{
+    "attributes":{
+        id: 1,
+        "Name": "Feature name"
+    },
+    "geometry": {
+        "x": -3,
+        "y": 40,
+        "spatialReference": {"wkid" : 4326}
+    }
+  }
+  // Add as many features as you want
+];
+
+service.addFeatures({
+    serviceName: "Your service name",
+    layer: "0",
+    features: data
+}).then(function(response){
+    console.log("response = ", response);
+},function(e){
+    console.log("Error: ", e);
 });
 ```
