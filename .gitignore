@@ -1,0 +1,4 @@
+.idea/
+*.iml
+examples/config.json
+node_modules

@@ -1,0 +1,7 @@
+{
+    "username":       "<Your username>",
+    "password":       "<Your password>",
+    "account_id":     "<Your account ID, from: http://services.arcgis.com/Q6ZFRRvMTlsTTFuP/arcgis/rest/services/... would be Q6ZFRRvMTlsTTFuP>",
+    "root_url":       "<In case you are using ArcGIS Online: www.arcgis.com, or your Portal's domain>",
+    "services_url":   "<Domain where your services are hosted. Would be services.arcgis.com if you are using ArcGIS Online>"
+}
