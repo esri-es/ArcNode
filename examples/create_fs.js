@@ -6,7 +6,7 @@ var config = require('./config'),
 
 service.checkIfFSExists( { serviceName: serviceName } ).then(function(available){
     if(available){
-        service.createFeatureService({name: serviceName}).then(function(response){
+        service.createFeatureService({serviceName: serviceName}).then(function(response){
 
         fields = [{
           "name": "OBJECTID",
@@ -30,7 +30,7 @@ service.checkIfFSExists( { serviceName: serviceName } ).then(function(available)
       }];
 
       layer = service.createLayer({
-          name: serviceName,
+          layerName: serviceName,
           fields: fields
       });
 

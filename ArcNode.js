@@ -122,8 +122,8 @@ module.exports = function ArcNode(options) {
             "name": "Set service name"
         };
 
-        if(options.name){
-            defaultFeature.name = options.name;
+        if(options.serviceName){
+            defaultFeature.name = options.serviceName;
         }
 
         var postData = querystring.stringify({
@@ -332,8 +332,8 @@ module.exports = function ArcNode(options) {
             ]
         }
 
-        if(options.name){
-            defaultLayer.layers[0].name = options.name;
+        if(options.layerName){
+            defaultLayer.layers[0].name = options.layerName;
         }
         if(options.fields){
             defaultLayer.layers[0].fields = options.fields;
