@@ -2,7 +2,6 @@ var config = require('./config'),
     ArcNode = require('arc-node'),
     service = new ArcNode(config);
 
-
 fields = [
     service.createField({
         "name": "OBJECTID",
@@ -26,11 +25,6 @@ fields = [
             ]
         }
     })
-
 ];
 
-layer = service.createLayer({
-    layerName: "My new layer",
-    fields: fields
-});
-console.log("layer = ", JSON.stringify(layer, null, "\t"));
+console.log("fields = ", JSON.stringify(fields, null, "\t"));

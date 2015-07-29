@@ -22,17 +22,24 @@ module.exports = function ArcNode(options) {
      *   This function renews the instance token for 15 days
      *
      ************************************************************/
-    this.getToken = function(){
-        var deferred = defer();
-        var postData = querystring.stringify({
+    this.getToken = function(options){
+        var deferred = defer(),
+            postData;
+
+        options = options || {};
+        options.client = options.client || 'referer';
+        options.referrer = options.expiration || 'arcgis.com';
+        options.expiration = options.expiration || 21600;
+
+        postData = querystring.stringify({
             f: 'json',
             username: that.username,
             password: that.password,
-            client: 'referer',
-            ip: '46.24.6.63',
-            referer: 'arcgis.com',
-            expiration: 21600
+            client: options.client,
+            referer: options.referrer,
+            expiration: options.expiration
         });
+
 
         var req = https.request({
             hostname: that.root_url,
@@ -392,6 +399,7 @@ module.exports = function ArcNode(options) {
         if(o.domain){f.domain= o.domain;}
         if(o.defaultValue){f.defaultValue= o.defaultValue;}
         if(o.length){f.length = o.length;}
+        if(o.domain){f.domain = o.domain;}
 
         return f;
 
@@ -405,7 +413,7 @@ module.exports = function ArcNode(options) {
      ************************************************************/
     this.addFeatures = function (options) {
 
-        var req, deferred, path, requestOptions;
+        var req, deferred, path, requestOptions, postData;
 
         deferred = defer();
 
@@ -418,9 +426,8 @@ module.exports = function ArcNode(options) {
         path = "/" + that.account_id + "/arcgis/rest/services/"+ options.serviceName + "/FeatureServer/" + options.layer+"/addFeatures?token=" + that.token;
 
         requestOptions = {
-            host: "127.0.0.1",
-            port: "8888",
-            path: "http://"+that.services_url+encodeURI(path),
+            host: that.services_url,
+            path: encodeURI(path),
             method: 'POST',
             headers: {
                 "Accept": "application/json",
