@@ -265,7 +265,7 @@ console.log("sqlType = ", sqlType);
     </table>
   </td>
 </tr>
-</table>l
+</table>
 
 **How to use it**
 ```javascript
@@ -350,15 +350,15 @@ layer = service.createLayer({
 console.log("layer = ", layer);
 ```
 ----------------
-### Add a layer to a feature service
-**Description**:  it add a layer to a service based on the definition of the layer.<br>
+### Add a layers to a feature service
+**Description**:  it add layers to a service based on the definition of the layer.<br>
 **Return**: a [deferred](http://dojotoolkit.org/reference-guide/1.10/dojo/Deferred.html) object. When it's resolved: it returns the [ArcGIS API REST response](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#/AddToDefinitionFeatureService/02r300000230000000/#GUID-2C31B4E2-8112-4872-88F8-71BC3B74B6DD).<br> 
 **Example**: [See full example](https://github.com/esri-es/ArcNode/tree/master/examples)
 
 <table>
 <tr>
   <td><strong>Name</strong></td>
-  <td>addLayerToFS(options?)</td>
+  <td>addLayersToFS(options?)</td>
 </tr>
 <tr>
   <td><strong>Options</strong><br>(JSON object)</td>
@@ -377,10 +377,10 @@ console.log("layer = ", layer);
       <td>URL of the service where the layers is going to be added</td>
     </tr>
     <tr>
-      <td>layer</td>
-      <td>JSON Object</td>
+      <td>layers</td>
+      <td>Array of JSON Objects</td>
       <td>Yes</td>
-      <td>Object describing the layer object (<a href="http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r300000230000000#GUID-63F2BD08-DCF4-485D-A3E6-C7116E17DDD8">see an example</a>). It can be generated using the <a href="#create-a-json-object-describing-a-layer">createLayer() method</a></td>
+      <td>Array of objects describing the layers (<a href="http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r300000230000000#GUID-63F2BD08-DCF4-485D-A3E6-C7116E17DDD8">see an example</a>). It can be generated using the <a href="#create-a-json-object-describing-a-layer">createLayer() method</a></td>
     </tr>
     </table>
   </td>
@@ -389,9 +389,9 @@ console.log("layer = ", layer);
 
 **How to use it**
 ```javascript
-service.addLayerToFS({
+service.addLayersToFS({
   service: response.encodedServiceURL,
-  layer: layer
+  layers: [layer]
 }).then(function(response){
   console.log("response: ", response);
 }, function(e){
@@ -401,7 +401,7 @@ service.addLayerToFS({
 ----------------
 
 ### Add features to a layer
-**Description**:  add features to a new layer<br>
+**Description**:  add features to a feature layer<br>
 **Return**: a [deferred](http://dojotoolkit.org/reference-guide/1.10/dojo/Deferred.html) object. When it's resolved: it return de [ArcGIS API REST response](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#/Add_Features/02r30000010m000000/#GUID-6EDF1F16-5716-4B4D-9975-47FEA30AA359).<br> 
 **Example**: [See full example](https://github.com/esri-es/ArcNode/tree/master/examples)
 
