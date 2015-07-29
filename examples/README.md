@@ -1,7 +1,7 @@
 # How to run the examples
 
 Go to this directory (*examples*) and run:
-```npm install --save arc-node```
+```npm install```
 
 Rename the *config.json.sample* to *config.json* and set up the variables.
 
