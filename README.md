@@ -21,7 +21,7 @@ When you have instanciate the service you will have available methods to:
 * [Determine the SQLType for an EsriType](#determine-the-sqltype-for-an-esritype)
 * [Create a JSON object describing a field in a layer](#create-a-json-object-describing-a-field-in-a-layer)
 * [Create a JSON object describing a layer](#create-a-json-object-describing-a-layer)
-* [Add layers to a feature service](#add-a-layer-to-a-feature-service)
+* [Add layers to a feature service](#add-layers-to-a-feature-service)
 * [Add features to a layer](#add-features-to-a-layer)
 
 ### Get a new token
