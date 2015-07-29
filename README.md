@@ -19,9 +19,9 @@ When you have instanciate the service you will have available methods to:
 * [Check if a feature service exists](#check-if-a-feature-service-exists)
 * [Create an empty feature service](#create-an-empty-feature-service)
 * [Determine the SQLType for an EsriType](#determine-the-sqltype-for-an-esritype)
-* [Create a JSON object describing a field in a layer](#create-a-JSON-object-describing-a-field-in-a-layer)
+* [Create a JSON object describing a field in a layer](#create-a-json-object-describing-a-field-in-a-layer)
 * [Create a JSON object describing a layer](#create-a-json-object-describing-a-layer)
-* [Add a layer to a feature service](#add-a-layer-to-a-feature-service)
+* [Add layers to a feature service](#add-a-layer-to-a-feature-service)
 * [Add features to a layer](#add-features-to-a-layer)
 
 ### Get a new token
@@ -79,7 +79,7 @@ service.getToken().then(function(response){
 ### Check if a feature service exists
 **Description**: Check if a feature service with that name exists <br>
 **Return**: a [deferred](http://dojotoolkit.org/reference-guide/1.10/dojo/Deferred.html) object. When it's resolved: it returns the [ArcGIS REST API response](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r300000076000000#GUID-916B5F3A-FCF7-49BE-BC01-5C8DB161F2EC).<br> 
-**Example**: [See full example](https://github.com/esri-es/ArcNode/tree/master/examples)
+**Example**: [See full example](/examples/checkIfFSExists.js)
 
 <table>
 <tr>
@@ -119,7 +119,7 @@ service.checkIfFSExists( { serviceName: "Service name" } ).then(function(availab
 ### Create an empty feature service
 **Description**:  it creates a feature service with no layers in it<br>
 **Return**: a [deferred](http://dojotoolkit.org/reference-guide/1.10/dojo/Deferred.html) object. When it's resolved: it returns the [ArcGIS REST API response](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r30000027r000000#GUID-0BC44A32-475E-4F30-A8DE-2812FA88A070).<br> 
-**Example**: [See full example](https://github.com/esri-es/ArcNode/tree/master/examples)
+**Example**: [See full example](/examples/createFeatureService.js)
 
 <table>
 <tr>
@@ -159,7 +159,7 @@ service.createFeatureService({serviceName: serviceName}).then(function(response)
 ### Determine the SQLType for an EsriType
 **Description**: translate an EsriType (esriFieldTypeString, esriFieldTypeDouble and esriFieldTypeInteger) to SQL Types, needed to created new fields when defining a new layer<br>
 **Return**: a string width the sqlType.<br> 
-**Example**: [See full example](https://github.com/esri-es/ArcNode/tree/master/examples)
+**Example**: [See full example](/examples/esriTypeToSqlType.js)
 
 <table>
 <tr>
@@ -196,7 +196,7 @@ console.log("sqlType = ", sqlType);
 ### Create a JSON object describing a field in a layer
 **Description**:  this method returns a JSON object with a field definition<br>
 **Return**: a <a href="https://services.arcgis.com/help/layerAddToDefinition.html#Example1">JSON defining a field in a layer</a>.<br> 
-**Example**: [See full example](https://github.com/esri-es/ArcNode/tree/master/examples)
+**Example**: [See full example](/examples/createField.js)
 
 <table>
 <tr>
@@ -286,7 +286,7 @@ service.createField({
 ### Create a JSON object describing a layer
 **Description**:  this method returns a JSON object with a quite simple layer definition<br>
 **Return**: a <a href="http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r300000230000000#GUID-63F2BD08-DCF4-485D-A3E6-C7116E17DDD8">JSON defining a layer</a>.<br> 
-**Example**: [See full example](https://github.com/esri-es/ArcNode/tree/master/examples)
+**Example**: [See full example](/examples/createLayer.js)
 
 <table>
 <tr>
@@ -350,10 +350,10 @@ layer = service.createLayer({
 console.log("layer = ", layer);
 ```
 ----------------
-### Add a layers to a feature service
+### Add layers to a feature service
 **Description**:  it add layers to a service based on the definition of the layer.<br>
 **Return**: a [deferred](http://dojotoolkit.org/reference-guide/1.10/dojo/Deferred.html) object. When it's resolved: it returns the [ArcGIS API REST response](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#/AddToDefinitionFeatureService/02r300000230000000/#GUID-2C31B4E2-8112-4872-88F8-71BC3B74B6DD).<br> 
-**Example**: [See full example](https://github.com/esri-es/ArcNode/tree/master/examples)
+**Example**: [See full example](/examples/addLayerToFS.js)
 
 <table>
 <tr>
@@ -403,7 +403,7 @@ service.addLayersToFS({
 ### Add features to a layer
 **Description**:  add features to a feature layer<br>
 **Return**: a [deferred](http://dojotoolkit.org/reference-guide/1.10/dojo/Deferred.html) object. When it's resolved: it return de [ArcGIS API REST response](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#/Add_Features/02r30000010m000000/#GUID-6EDF1F16-5716-4B4D-9975-47FEA30AA359).<br> 
-**Example**: [See full example](https://github.com/esri-es/ArcNode/tree/master/examples)
+**Example**: [See full example](/examples/addFeatures.js)
 
 <table>
 <tr>
