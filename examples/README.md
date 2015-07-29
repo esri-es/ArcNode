@@ -6,5 +6,5 @@ Go to this directory (*examples*) and run:
 Rename the *config.json.sample* to *config.json* and set up the variables.
 
 And finally run any of the examples like this:
-* ```node get_token.js```
-* ```node create_fs.js```
+* ```node <script_name>```
+
