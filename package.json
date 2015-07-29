@@ -1,6 +1,6 @@
 {
   "name": "arc-node",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "description": "Node module to work with ArcGIS Online and ArcGIS Server",
   "main": "ArcNode.js",
   "scripts": {
