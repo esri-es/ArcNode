@@ -245,9 +245,9 @@ console.log("sqlType = ", sqlType);
     </tr>
     <tr>
       <td>domain</td>
-      <td></td>
+      <td>Object</td>
       <td>No</td>
-      <td>An object defining the <a href="http://resources.arcgis.com/en/help/main/10.1/index.html#/A_quick_tour_of_attribute_domains/001s00000001000000/">domain</a> (view example)</td>
+      <td>An object defining the <a href="http://resources.arcgis.com/en/help/main/10.1/index.html#/A_quick_tour_of_attribute_domains/001s00000001000000/">domain</a> (*<a href="/examples/createField.js">view example</a>*)</td>
     </tr>
     <tr>
       <td>defaultValue</td>
