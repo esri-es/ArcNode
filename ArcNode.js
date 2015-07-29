@@ -254,14 +254,14 @@ module.exports = function ArcNode(options) {
                     "type": "simple",
                     "symbol": {
                         "type": "esriPMS",
-                        "url": "gray_large_blank.png",
+                        "url": "blue_small_dot.png",
                         "contentType": "image/png",
-                        "width": 29.25,
-                        "height": 37.5,
+                        "width": 9.75,
+                        "height": 9.75,
                         "xoffset": 0,
-                        "yoffset": 11.75,
+                        "yoffset": 0,
                         "angle": 0,
-                        "imageData": "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAA+UlEQVQYV42QPU7DMBiG/SvXDZSUSjAhmaE7vQkszM0NegVOwBGyV0LlJmVnwBJbECUEuanlP2qXVKJi4BtsfdbzvbYfCH5KlC85HWTX0EMRjwIK0jTqURaXdexhXMbz6opQvBj1mcgYSaNKW/C+1tIad/N8e/YEYxLPB8uLPBOM4O6CtGvrwGutZFs3Ezh+qKanvFcO++wX1DUfaw1W7abYgm/350d8dpjWgTG1atq7BI44m1GC/kw01oOV0hGsphmlZe/gfd3UZpuojCnSZ9jJ8ZITLBBMEvblQwCtdVJ/fk32ehBGC4ygQDtjwIMAnA/SO7/T81/h3/9YcxdBNn3dAAAAAElFTkSuQmCC"
+                        "imageData": "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAA9UlEQVQYV42QQU7DMBBFx3aCnRSJBomuuvAGwZLehNyA3qBX6Ak4Qk9QpTcp+2686AoqGiSa2MQeozhNJSoWnYWtsb7/n3kEjiWL/VCgewbwsnsiSlO2UnlWhq497ov3pxhYcZtyOeBRkB2Mhc/KqAZcvslHb6R1SgHX4+FA8oj1AeE21sG2PKgK6IQ8LncvN8nVIkv5H1Hf7CsDX/XPlDwsP17vrpPZuVsvbF133/U8CLOEz+KI/uvYWISyNvMQLWK2EGfz9b+0daAbNw3LCO/WImKSkgDhVOg9aOuUJmxywsOQFpQSSTtigOAB0StHscNzKfBfZkltaaUCjW0AAAAASUVORK5CYII="
                     },
                     "label": "",
                     "description": ""
