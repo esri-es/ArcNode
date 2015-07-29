@@ -6,7 +6,7 @@ Node module to work with ArcGIS Online and ArcGIS Server.
 Just write this in your prompt:
 ```npm install --save arc-node```
 
-And you are ready to use it like this:
+And you are ready to go, just instantiate the object like this:
 ```javascript
 var ArcNode = require('arc-node'),
     service = new ArcNode(<config object>);
@@ -14,7 +14,7 @@ var ArcNode = require('arc-node'),
 Check here the description of the *[\<config object\>](/examples/config.json.sample)* parameter.
 
 ## Documentation
-When you have instanciate the service you will have available methods to:
+When you have instantiate the service you will have available methods to:
 * [Get a new token](#get-a-new-token)
 * [Check if a feature service exists](#check-if-a-feature-service-exists)
 * [Create an empty feature service](#create-an-empty-feature-service)
@@ -25,7 +25,7 @@ When you have instanciate the service you will have available methods to:
 * [Add features to a layer](#add-features-to-a-layer)
 
 ### Get a new token
-**Description**: Gets a new token valid for 15 days <br>
+**Description**: Gets a new valid token.<br>
 **Return**: a [deferred](http://dojotoolkit.org/reference-guide/1.10/dojo/Deferred.html) object. When it's resolved: it returns the [ArcGIS REST API response](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#/Generate_Token/02r3000000m5000000/#GUID-D63FBD54-1269-4A92-8AAB-BDE5B0393F28).<br> 
 **Example**: [See full example](/examples/getToken.js)
 
@@ -77,7 +77,7 @@ service.getToken().then(function(response){
 ```
 ----------------
 ### Check if a feature service exists
-**Description**: Check if a feature service with that name exists <br>
+**Description**: Check if a feature service with a given name exists.<br>
 **Return**: a [deferred](http://dojotoolkit.org/reference-guide/1.10/dojo/Deferred.html) object. When it's resolved: it returns the [ArcGIS REST API response](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r300000076000000#GUID-916B5F3A-FCF7-49BE-BC01-5C8DB161F2EC).<br> 
 **Example**: [See full example](/examples/checkIfFSExists.js)
 
@@ -109,8 +109,8 @@ service.getToken().then(function(response){
 
 **How to use it**
 ```javascript
-service.checkIfFSExists( { serviceName: "Service name" } ).then(function(available){
-  console.log("available = ", available);
+service.checkIfFSExists( { serviceName: "Service name" } ).then(function(response){
+  console.log("response = ", response);
 }, function(e){
   console.log("Error: ", e);
 });
@@ -284,7 +284,7 @@ service.createField({
 ```
 ----------------
 ### Create a JSON object describing a layer
-**Description**:  this method returns a JSON object with a quite simple layer definition<br>
+**Description**:  this method returns a JSON object with a simple layer definition<br>
 **Return**: a <a href="http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r300000230000000#GUID-63F2BD08-DCF4-485D-A3E6-C7116E17DDD8">JSON defining a layer</a>.<br> 
 **Example**: [See full example](/examples/createLayer.js)
 
@@ -351,7 +351,7 @@ console.log("layer = ", layer);
 ```
 ----------------
 ### Add layers to a feature service
-**Description**:  it add layers to a service based on the definition of the layer.<br>
+**Description**:  it add layers to a service based on the definition of each layer.<br>
 **Return**: a [deferred](http://dojotoolkit.org/reference-guide/1.10/dojo/Deferred.html) object. When it's resolved: it returns the [ArcGIS API REST response](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#/AddToDefinitionFeatureService/02r300000230000000/#GUID-2C31B4E2-8112-4872-88F8-71BC3B74B6DD).<br> 
 **Example**: [See full example](/examples/addLayerToFS.js)
 
@@ -447,8 +447,7 @@ service.addLayersToFS({
 ```javascript
 var data = [{
     "attributes":{
-        id: 1,
-        "Name": "Feature name"
+        "name": "Feature name"
     },
     "geometry": {
         "x": -3,
@@ -461,7 +460,7 @@ var data = [{
 
 service.addFeatures({
     serviceName: "Your service name",
-    layer: "0",
+    layer: "<layer index>",
     features: data
 }).then(function(response){
     console.log("response = ", response);
