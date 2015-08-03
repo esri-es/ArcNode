@@ -322,26 +322,18 @@ service.createField({
 
 **How to use it**
 ```javascript
-fields = [{
-    "name": "OBJECTID",
-    "type": "esriFieldTypeOID",
-    "alias": "OBJECTID",
-    "sqlType": "sqlTypeOther",
-    "nullable": false,
-    "editable": false,
-    "domain": null,
-    "defaultValue": null
-  },{
-    "name": "Name",
-    "type": "esriFieldTypeString",
-    "alias": "Your name",
-    "sqlType": service.esriToSqlType('esriFieldTypeString'),
-    "nullable": false,
-    "editable": false,
-    "domain": null,
-    "defaultValue": null,
-    "length": 255
-}];
+fields = [
+    service.createField({
+        "name": "OBJECTID",
+        "type": "esriFieldTypeOID",
+        "nullable": false,
+        "editable": false
+    }),
+    service.createField({
+        "name": "name",
+        "type": "esriFieldTypeString"
+    })
+]
 
 layer = service.createLayer({
     layerName: "My new layer",
