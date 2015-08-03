@@ -1,12 +1,13 @@
 /**
  * Created by Raul.Jimenez on 17/07/2015.
  */
+'use strict';
 
 var defer = require("node-promise").defer;
 var querystring = require('querystring');
 var https = require('https');
 var http = require('http');
-var StringDecoder = require('string_decoder').StringDecoder;
+//var StringDecoder = require('string_decoder').StringDecoder;
 
 module.exports = function ArcNode(options) {
     this.username =     options.username;
@@ -14,7 +15,7 @@ module.exports = function ArcNode(options) {
     this.account_id =   options.account_id;
     this.root_url =     options.root_url;
     this.services_url = options.services_url;
-    that = this;
+    var that = this;
 
 
     /************************************************************
@@ -74,13 +75,14 @@ module.exports = function ArcNode(options) {
      ************************************************************/
     this.checkIfFSExists = function(options){
         var deferred = defer();
-        var url = "https://"+that.root_url+"/sharing/rest/portals/"+that.account_id+"/isServiceNameAvailable?name="+options.serviceName+"&f=json&type=Feature Service&token="+this.token;
+        var req;
+        var url = "https://" + that.root_url+"/sharing/rest/portals/" + that.account_id+"/isServiceNameAvailable?name=" + options.serviceName+"&f=json&type=Feature Service&token=" + that.token;
 
         req = https.get(url, function(res) {
             res.on("data", function(chunk) {
                 chunk = JSON.parse(chunk);
                 if(chunk.error && chunk.error.code == 498){
-                    that.getToken().then(function(token){
+                    that.getToken().then(function(response){
                         that.checkIfFSExists(options).then(function(available){
                             deferred.resolve(available);
                         });
@@ -94,7 +96,7 @@ module.exports = function ArcNode(options) {
         }).on('error', function(e) {
             deferred.reject(e.message);
         });
-        req = req.end();
+        req.end();
         return deferred;
     };
 
@@ -229,7 +231,7 @@ module.exports = function ArcNode(options) {
      *
      ************************************************************/
     this.createLayer = function(options){
-        var attributes, defaultLayer = {
+        var attributes, key, defaultLayer = {
             "adminLayerInfo": {
                 "geometryField": {
                     "name": "Shape",
@@ -391,8 +393,8 @@ module.exports = function ArcNode(options) {
             f.length = 255
         }
 
-        if(o.name){ f.name = o.name; f.alias = o.name;};
-        if(o.type){ f.type = o.type; f.sqlType = that.esriTypeToSqlType(o.type)};
+        if(o.name){ f.name = o.name; f.alias = o.name;}
+        if(o.type){ f.type = o.type; f.sqlType = that.esriTypeToSqlType(o.type)}
         if(o.alias){f.alias = o.alias;}
         if(o.nullable){f.nullable= o.nullable;}
         if(o.editable){f.editable= o.editable;}
