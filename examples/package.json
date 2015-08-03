@@ -8,6 +8,6 @@
         "url": "http://desarrolladores.esri.es"
     },
     "dependencies": {
-        "arc-node": "0.2.2"
+        "arc-node": "0.2.3"
     }
 }
