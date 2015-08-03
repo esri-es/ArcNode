@@ -1,6 +1,6 @@
 {
   "name": "arc-node",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Node module to work with ArcGIS Online and ArcGIS Server",
   "main": "ArcNode.js",
   "scripts": {
@@ -23,9 +23,6 @@
   },
   "homepage": "https://github.com/esri-es/ArcNode",
   "dependencies": {
-    "http": "0.0.0",
-    "https": "^1.0.0",
-    "node-promise": "^0.5.12",
-    "querystring": "^0.2.0"
+    "node-promise": "^0.5.12"
   }
 }
