@@ -15,6 +15,8 @@ module.exports = function ArcNode(options) {
     this.account_id =   options.account_id;
     this.root_url =     options.root_url;
     this.services_url = options.services_url;
+    this.print_service = options.print_service || "http://sampleserver6.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task";
+    this.find_address_candidates_service = options.find_address_candidates_service || "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
     var that = this;
 
 
@@ -468,5 +470,131 @@ module.exports = function ArcNode(options) {
         req.end();
 
         return deferred;
-    };
-}
+    },
+
+    /************************************************************
+     *
+     *   This methods returns candidates for an address using
+     *   find_address_candidates_service
+     *
+     ************************************************************/
+    this.findAddressCandidates = function (options) {
+        var xy, deferred, path, query;
+
+        if(options.x && options.y) {
+            xy = [options.x, options.y];
+            return {
+                then: function(callback){
+                    callback(xy);
+                }
+            };
+
+        }else if(options.address){
+            deferred = defer();
+            query = {
+                SingleLine: options.address,
+                f: "json",
+                outSR: '{"wkid":102100}',
+                outFields: "Match_addr",
+                Addr_type: "StAddr,City",
+                maxLocations:1
+            };
+
+            query = Object.keys(query).map(function(k) {
+                return encodeURIComponent(k) + '=' + encodeURIComponent(query[k])
+            }).join('&');
+
+            path = this.find_address_candidates_service + "?" + query;
+            https.get(path, function(response) {
+
+                response.setEncoding('utf8');
+                response.on('data', function (chunk) {
+                    chunk = JSON.parse(chunk);
+                    deferred.resolve(chunk);
+                });
+
+            }).on('error', function(e) {
+                console.log("Got error: " + e.message);
+                deferred.reject(e);
+            });
+
+            return deferred.promise;
+
+        }else{
+            return {error: "You should specify a longitude & latitude or an address"};
+        }
+    },
+
+    /************************************************************
+     *
+     *   This methods execute print_service, by default the
+     *   Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task
+     *
+     ************************************************************/
+    this.ExportWebMapTask = function (options) {
+        var postData, deferred, requestOptions, req;
+
+        deferred = defer();
+
+        postData = querystring.stringify({
+            f: options.f || "json",
+            format: options.format || "PNG32",
+            Layout_Template: options.layoutTemplate || "MAP_ONLY",
+            Web_Map_as_JSON: JSON.stringify(options.webmap)
+        });
+
+        requestOptions = {
+            host: this.getLocation(this.print_service).host,
+            path: this.getLocation(this.print_service).pathname + '/execute',
+            method: 'POST',
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded",
+                'Content-Length': postData.length
+            }
+        };
+
+        req = http.request(requestOptions, function (response) {
+            response.setEncoding('utf8');
+
+            response.on('data', function (chunk) {
+                chunk = JSON.parse(chunk);
+                deferred.resolve(chunk);
+
+            });
+        });
+
+        req.on('error', function (e) {
+            console.log('Problem with request: ', e.message);
+            deferred.reject(e);
+        });
+
+        req.write(postData);
+
+        req.end();
+
+        return deferred;
+    },
+
+    /************************************************************
+     *
+     *   This methods returns a JSON object with the different
+     *   parts of the URL (host, pathname, etc.)
+     *
+     ************************************************************/
+    this.getLocation = function(url){
+
+        var match = url.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)(\/[^?#]*)(\?[^#]*|)(#.*|)$/);
+        return match && {
+            protocol: match[1],
+            host: match[2],
+            hostname: match[3],
+            port: match[4],
+            pathname: match[5],
+            search: match[6],
+            hash: match[7]
+        }
+    }
+
+
+};
