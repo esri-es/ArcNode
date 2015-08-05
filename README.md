@@ -23,8 +23,8 @@ When you have instantiate the service you will have available methods to:
 * [Create a JSON object describing a layer](#create-a-json-object-describing-a-layer)
 * [Add layers to a feature service](#add-layers-to-a-feature-service)
 * [Add features to a layer](#add-features-to-a-layer)
-* [Find address candidatez](#add-features-to-a-layer)
-* [Export a webmap](#add-features-to-a-layer)
+* [Find address candidatez](#find-address-candidates)
+* [Export a webmap](#export-a-webmap)
 
 ### Get a new token
 **Description**: Gets a new valid token.<br>
