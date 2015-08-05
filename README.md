@@ -23,6 +23,8 @@ When you have instantiate the service you will have available methods to:
 * [Create a JSON object describing a layer](#create-a-json-object-describing-a-layer)
 * [Add layers to a feature service](#add-layers-to-a-feature-service)
 * [Add features to a layer](#add-features-to-a-layer)
+* [Find address candidatez](#add-features-to-a-layer)
+* [Export a webmap](#add-features-to-a-layer)
 
 ### Get a new token
 **Description**: Gets a new valid token.<br>
@@ -458,5 +460,122 @@ service.addFeatures({
     console.log("response = ", response);
 },function(e){
     console.log("Error: ", e);
+});
+```
+----------------
+
+### Find address candidates
+**Description**:  find xy locations for an address<br>
+**Return**: a [deferred](http://dojotoolkit.org/reference-guide/1.10/dojo/Deferred.html) object. When it's resolved: it return de [ArcGIS API REST response](http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#/WorldGeocodingService/02r30000027s000000/).<br> 
+**Example**: [See full example](/examples/findAddressCandidates.js)
+
+<table>
+<tr>
+  <td><strong>Name</strong></td>
+  <td>findAddressCandidates(options?)</td>
+</tr>
+<tr>
+  <td><strong>Options</strong><br>(JSON object)</td>
+  <td>
+    <table>
+    <tr>
+      <td><strong>Name</strong></td>
+      <td><strong>Type</strong></td>
+      <td><strong>Required?</strong></td>
+      <td><strong>Description</strong></td>
+    </tr>
+    <tr>
+      <td>address</td>
+      <td>String</td>
+      <td>Yes</td>
+      <td>The address</td>
+    </tr>
+    </table>
+  </td>
+</tr>
+</table>
+
+**How to use it**
+```javascript
+service.findAddressCandidates({
+    address: "Emilio muñoz 35, madrid"
+}).then(function(response){
+    console.log("response: ", JSON.stringify(response, null, "\t"));
+});
+```
+----------------
+
+### Export a webmap
+**Description**:  generate a static image from a webmap object
+**Return**: a [deferred](http://dojotoolkit.org/reference-guide/1.10/dojo/Deferred.html) object. When it's resolved: it return de [ArcGIS API REST response](https://sampleserver6.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task).<br> 
+**Example**: [See full example](/examples/ExportWebMapTask.js)
+
+<table>
+<tr>
+  <td><strong>Name</strong></td>
+  <td>ExportWebMapTask(options?)</td>
+</tr>
+<tr>
+  <td><strong>Options</strong><br>(JSON object)</td>
+  <td>
+    <table>
+    <tr>
+      <td><strong>Name</strong></td>
+      <td><strong>Type</strong></td>
+      <td><strong>Required?</strong></td>
+      <td><strong>Description</strong></td>
+    </tr>
+    <tr>
+      <td>webmap</td>
+      <td>JSON Object</td>
+      <td>Yes</td>
+      <td>A <a href="http://resources.arcgis.com/en/help/arcgis-web-map-json/index.html#/Web_map_data/02qt0000000q000000/">webmap object</a></td>
+    </tr>
+    </table>
+  </td>
+</tr>
+</table>
+
+**How to use it**
+```javascript
+service.ExportWebMapTask({
+    webmap: {
+        "mapOptions": {
+            "showAttribution": true,
+            "extent": {
+                "xmin": -10212866.663781697,
+                "ymin": 3600493.212559925,
+                "xmax": -9987836.052510148,
+                "ymax": 3829804.2974154423,
+                "spatialReference": {
+                    "wkid": 102100,
+                    "latestWkid": 3857
+                }
+            },
+            "spatialReference": {
+                "wkid": 102100,
+                "latestWkid": 3857
+            }
+        },
+        "operationalLayers": [
+            {
+                "id": "Ocean",
+                "title": "Ocean",
+                "opacity": 1,
+                "minScale": 591657527.591555,
+                "maxScale": 9027.977411,
+                "url": "http://services.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer"
+            }
+        ],
+        "exportOptions": {
+            "outputSize": [
+                800,
+                1100
+            ],
+            "dpi": 96
+        }
+    }
+}).then(function(response){
+    console.log("response: ", JSON.stringify(response, null, "\t"));
 });
 ```
