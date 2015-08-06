@@ -18,9 +18,6 @@ When you have instantiate the service you will have available methods to:
 * [Get a new token](#get-a-new-token)
 * [Check if a feature service exists](#check-if-a-feature-service-exists)
 * [Create an empty feature service](#create-an-empty-feature-service)
-* [Determine the SQLType for an EsriType](#determine-the-sqltype-for-an-esritype)
-* [Create a JSON object describing a field in a layer](#create-a-json-object-describing-a-field-in-a-layer)
-* [Create a JSON object describing a layer](#create-a-json-object-describing-a-layer)
 * [Add layers to a feature service](#add-layers-to-a-feature-service)
 * [Add features to a layer](#add-features-to-a-layer)
 * [Find address candidates](#find-address-candidates)
@@ -50,13 +47,13 @@ When you have instantiate the service you will have available methods to:
       <td>client</td>
       <td>String</td>
       <td>No</td>
-      <td>The client type that will be granted access to the token. Only the referer value is supported. In the Generate Token page, select the Webapp URL option to specify the referer.</td>
+      <td>The client type that will be granted access to the token. Only the referer value is supported.  In the Generate Token page, the referer is specified in the Webapp URL field, for example: referer=http://myserver/mywebapp</td>
     </tr>
     <tr>
       <td>referer</td>
       <td>String</td>
       <td>No</td>
-      <td>The base URL of the client application that will use the token to access the Portal for ArcGIS API. In the Generate Token page, the referer is specified in the Webapp URL field, for example: referer=http://myserver/mywebapp.</td>
+      <td>Default value: arcgis.com | The base URL of the client application that will use the token to access the Portal for ArcGIS API. In the Generate Token page, the referer is specified in the Webapp URL field, for example: referer=http://myserver/mywebapp.</td>
     </tr>
     <tr>
       <td>expiration</td>
@@ -71,10 +68,11 @@ When you have instantiate the service you will have available methods to:
 
 **How to use it**
 ```javascript
-service.getToken().then(function(response){
-  console.log("response = ", response);
-}, function(e){
-  console.log("Error: ", e);
+//Get a token valid for 60 minutes
+service.getToken({
+    expiration: 60
+}).then(function(response){
+    console.log("response: ", response);
 });
 ```
 ----------------
@@ -139,7 +137,7 @@ service.checkIfFSExists( { serviceName: "Service name" } ).then(function(respons
       <td><strong>Description</strong></td>
     </tr>
     <tr>
-      <td>serviceName</td>
+      <td>name</td>
       <td>String</td>
       <td>Yes</td>
       <td>Name of the service</td>
@@ -151,197 +149,11 @@ service.checkIfFSExists( { serviceName: "Service name" } ).then(function(respons
 
 **How to use it**
 ```javascript
-service.createFeatureService({serviceName: serviceName}).then(function(response){
+service.createFeatureService({name: "My empty feature service"}).then(function(response){
   console.log("response = ", response);
 }, function(e){
   console.log("Error: ", e);
 });
-```
-----------------
-### Determine the SQLType for an EsriType
-**Description**: translate an EsriType (esriFieldTypeString, esriFieldTypeDouble and esriFieldTypeInteger) to SQL Types, needed to created new fields when defining a new layer<br>
-**Return**: a string width the sqlType.<br> 
-**Example**: [See full example](/examples/esriTypeToSqlType.js)
-
-<table>
-<tr>
-  <td><strong>Name</strong></td>
-  <td>esriTypeToSqlType(esriType)</td>
-</tr>
-<tr>
-  <td><strong>Parameters</strong><br></td>
-  <td>
-    <table>
-    <tr>
-      <td><strong>Name</strong></td>
-      <td><strong>Type</strong></td>
-      <td><strong>Required?</strong></td>
-      <td><strong>Description</strong></td>
-    </tr>
-    <tr>
-      <td>esriType</td>
-      <td>String</td>
-      <td>Yes</td>
-      <td>It returns: sqlTypeVarchar, sqlTypeDecimal, sqlTypeInteger or sqlTypeOther depending of the esriType</td>
-    </tr>
-    </table>
-  </td>
-</tr>
-</table>
-
-**How to use it**
-```javascript
-var sqlType = service.esriTypeToSqlType('esriFieldTypeString');
-console.log("sqlType = ", sqlType);
-```
-----------------
-### Create a JSON object describing a field in a layer
-**Description**:  this method returns a JSON object with a field definition<br>
-**Return**: a <a href="https://services.arcgis.com/help/layerAddToDefinition.html#Example1">JSON defining a field in a layer</a>.<br> 
-**Example**: [See full example](/examples/createField.js)
-
-<table>
-<tr>
-  <td><strong>Name</strong></td>
-  <td>createField(options?)</td>
-</tr>
-<tr>
-  <td><strong>Options</strong><br>(JSON object)</td>
-  <td>
-    <table>
-    <tr>
-      <td><strong>Name</strong></td>
-      <td><strong>Type</strong></td>
-      <td><strong>Required?</strong></td>
-      <td><strong>Description</strong></td>
-    </tr>
-    <tr>
-      <td>name</td>
-      <td>String</td>
-      <td>No</td>
-      <td>Name that we want to assign to the field</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>String</td>
-      <td>No</td>
-      <td><a href="http://resources.esri.com/help/9.3/arcgisserver/adf/java/help/api/arcgiswebservices/com/esri/arcgisws/EsriFieldType.html">esriFieldType</a></td>
-    </tr>
-    <tr>
-      <td>alias</td>
-      <td>String</td>
-      <td>No</td>
-      <td>Visible alias of the field</td>
-    </tr>
-    <tr>
-      <td>nullable</td>
-      <td>Boolean</td>
-      <td>No</td>
-      <td>If the field can be null</td>
-    </tr>
-    <tr>
-      <td>editable</td>
-      <td>Boolean</td>
-      <td>No</td>
-      <td>If the field can be edited</td>
-    </tr>
-    <tr>
-      <td>domain</td>
-      <td>Object</td>
-      <td>No</td>
-      <td>An object defining the <a href="http://resources.arcgis.com/en/help/main/10.1/index.html#/A_quick_tour_of_attribute_domains/001s00000001000000/">domain</a> (<a href="/examples/createField.js">view example</a>)</td>
-    </tr>
-    <tr>
-      <td>defaultValue</td>
-      <td>String</td>
-      <td>No</td>
-      <td>Default value of the field</td>
-    </tr>
-    <tr>
-      <td>length</td>
-      <td>Interger</td>
-      <td>No</td>
-      <td>In case the type is "esriFieldTypeString" the length of the field</td>
-    </tr>
-    
-    </table>
-  </td>
-</tr>
-</table>
-
-**How to use it**
-```javascript
-service.createField({
-    "name": "name",
-    "type": "esriFieldTypeString",
-    "domain": {
-        type: "codedValue",
-        name: "HouseType",
-        codedValues: [
-            { name: "Flat", code: "flat" },
-            { name: "Appartment", code: "appartment" }
-        ]
-    }
-})
-```
-----------------
-### Create a JSON object describing a layer
-**Description**:  this method returns a JSON object with a simple layer definition<br>
-**Return**: a <a href="http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r300000230000000#GUID-63F2BD08-DCF4-485D-A3E6-C7116E17DDD8">JSON defining a layer</a>.<br> 
-**Example**: [See full example](/examples/createLayer.js)
-
-<table>
-<tr>
-  <td><strong>Name</strong></td>
-  <td>createLayer(options?)</td>
-</tr>
-<tr>
-  <td><strong>Options</strong><br>(JSON object)</td>
-  <td>
-    <table>
-    <tr>
-      <td><strong>Name</strong></td>
-      <td><strong>Type</strong></td>
-      <td><strong>Required?</strong></td>
-      <td><strong>Description</strong></td>
-    </tr>
-    <tr>
-      <td>layerName</td>
-      <td>String</td>
-      <td>No</td>
-      <td>Name that we want to assign to the layer</td>
-    </tr>
-    <tr>
-      <td>fields</td>
-      <td>Array of objects</td>
-      <td>No</td>
-      <td>Array defining all fields available (<a href="http://resources.arcgis.com/en/help/sds/rest/index.html?featureServiceObject.html">check on this sample</a>)</td>
-    </tr>
-    </table>
-  </td>
-</tr>
-</table>
-
-**How to use it**
-```javascript
-fields = [
-    service.createField({
-        "name": "OBJECTID",
-        "type": "esriFieldTypeOID",
-        "nullable": false,
-        "editable": false
-    }),
-    service.createField({
-        "name": "name",
-        "type": "esriFieldTypeString"
-    })
-]
-
-layer = service.createLayer({
-    layerName: "My new layer",
-    fields: fields
-});
-console.log("layer = ", layer);
 ```
 ----------------
 ### Add layers to a feature service
@@ -454,7 +266,7 @@ var data = [{
 
 service.addFeatures({
     serviceName: "Your service name",
-    layer: "<layer index>",
+    layer: 0, //<layer index, Ex: 0, 1, 2, ...>
     features: data
 }).then(function(response){
     console.log("response = ", response);
@@ -538,43 +350,32 @@ service.findAddressCandidates({
 
 **How to use it**
 ```javascript
-service.ExportWebMapTask({
-    webmap: {
-        "mapOptions": {
-            "showAttribution": true,
-            "extent": {
-                "xmin": -10212866.663781697,
-                "ymin": 3600493.212559925,
-                "xmax": -9987836.052510148,
-                "ymax": 3829804.2974154423,
-                "spatialReference": {
-                    "wkid": 102100,
-                    "latestWkid": 3857
-                }
-            },
-            "spatialReference": {
-                "wkid": 102100,
-                "latestWkid": 3857
-            }
-        },
-        "operationalLayers": [
-            {
-                "id": "Ocean",
-                "title": "Ocean",
-                "opacity": 1,
-                "minScale": 591657527.591555,
-                "maxScale": 9027.977411,
-                "url": "http://services.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer"
-            }
-        ],
-        "exportOptions": {
-            "outputSize": [
-                800,
-                1100
-            ],
-            "dpi": 96
+var webmap = ArcJSON.exportableWebmap({
+    "mapOptions": {
+        "extent": {
+            "xmin": -422228.3214312691,
+            "ymin": 4921137.768125086,
+            "xmax": -396125.07627191657,
+            "ymax": 4928896.126496022
         }
+    },
+    "operationalLayers": [
+        {
+            "opacity": 1,
+            "url": "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"
+        }
+    ],
+    "exportOptions": {
+        "outputSize": [
+            600,
+            300
+        ],
+        "dpi": 192
     }
+});
+
+service.ExportWebMapTask({
+    webmap: webmap
 }).then(function(response){
     console.log("response: ", JSON.stringify(response, null, "\t"));
 });
