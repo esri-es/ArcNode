@@ -1,44 +1,34 @@
 var config = require('./config'),
     ArcNode = require('arc-node'),
+    ArcJSON = require('arcgis-json-objects'),
     service = new ArcNode(config);
 
-service.ExportWebMapTask({
-    webmap: {
-        "mapOptions": {
-            "showAttribution": true,
-            "extent": {
-                "xmin": -10212866.663781697,
-                "ymin": 3600493.212559925,
-                "xmax": -9987836.052510148,
-                "ymax": 3829804.2974154423,
-                "spatialReference": {
-                    "wkid": 102100,
-                    "latestWkid": 3857
-                }
-            },
-            "spatialReference": {
-                "wkid": 102100,
-                "latestWkid": 3857
-            }
-        },
-        "operationalLayers": [
-            {
-                "id": "Ocean",
-                "title": "Ocean",
-                "opacity": 1,
-                "minScale": 591657527.591555,
-                "maxScale": 9027.977411,
-                "url": "http://services.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer"
-            }
-        ],
-        "exportOptions": {
-            "outputSize": [
-                800,
-                1100
-            ],
-            "dpi": 96
+var webmap = ArcJSON.exportableWebmap({
+    "mapOptions": {
+        "extent": {
+            "xmin": -422228.3214312691,
+            "ymin": 4921137.768125086,
+            "xmax": -396125.07627191657,
+            "ymax": 4928896.126496022
         }
+    },
+    "operationalLayers": [
+        {
+            "opacity": 1,
+            "url": "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"
+        }
+    ],
+    "exportOptions": {
+        "outputSize": [
+            600,
+            300
+        ],
+        "dpi": 192
     }
+});
+
+service.ExportWebMapTask({
+    webmap: webmap
 }).then(function(response){
     console.log("response: ", JSON.stringify(response, null, "\t"));
 });

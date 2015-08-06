@@ -5,16 +5,18 @@
 
 var defer = require("node-promise").defer;
 var querystring = require('querystring');
+var ArcJSON = require('arcgis-json-objects');
 var https = require('https');
 var http = require('http');
 //var StringDecoder = require('string_decoder').StringDecoder;
 
 module.exports = function ArcNode(options) {
-    this.username =     options.username;
-    this.password =     options.password;
-    this.account_id =   options.account_id;
-    this.root_url =     options.root_url;
-    this.services_url = options.services_url;
+    options = options || {};
+    this.username =     options.username || "";
+    this.password =     options.password || "";
+    this.account_id =   options.account_id || "";
+    this.root_url =     options.root_url || "";
+    this.services_url = options.services_url || "";
     this.print_service = options.print_service || "http://sampleserver6.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task";
     this.find_address_candidates_service = options.find_address_candidates_service || "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
     var that = this;
@@ -110,35 +112,10 @@ module.exports = function ArcNode(options) {
     this.createFeatureService = function(options){
 
         var deferred = defer();
-        var defaultFeature = {
-            "maxRecordCount": 2000,
-            "supportedQueryFormats": "JSON",
-            "capabilities": "Query,Editing,Create,Update,Delete",
-            "description": "",
-            "allowGeometryUpdates": "true",
-            "units": "esriMeters",
-            "syncEnabled": "false",
-            "editorTrackingInfo": {
-                "enableEditorTracking": "false",
-                "enableOwnershipAccessControl": "false",
-                "allowOthersToUpdate": "true",
-                "allowOthersToDelete": "true"
-            },
-            "xssPreventionInfo": {
-                "xssPreventionEnabled": "true",
-                "xssPreventionRule": "InputOnly",
-                "xssInputRule": "rejectInvalid"
-            },
-            "tables": [],
-            "name": "Set service name"
-        };
-
-        if(options.serviceName){
-            defaultFeature.name = options.serviceName;
-        }
+        var fs = ArcJSON.featureService(options);
 
         var postData = querystring.stringify({
-            createParameters: JSON.stringify(defaultFeature),
+            createParameters: JSON.stringify(fs),
             targetType: "featureService",
             token: that.token,
             f: "json"
@@ -223,189 +200,6 @@ module.exports = function ArcNode(options) {
         req.write(postData);
         req.end();
         return deferred
-
-    };
-
-    /************************************************************
-     *
-     *   This generates a JSON object
-     *   More info: http://resources.arcgis.com/en/help/sds/rest/index.html?featureServiceObject.html
-     *
-     ************************************************************/
-    this.createLayer = function(options){
-        var attributes, key, defaultLayer = {
-            "adminLayerInfo": {
-                "geometryField": {
-                    "name": "Shape",
-                    "srid": 4326
-                }
-            },
-            "name": "Set_a_Layer_Name",
-            "type": "Feature Layer",
-            "geometryType": "esriGeometryPoint",
-            "extent": {
-                "type": "extent",
-                "xmin": -17.70518418985952,
-                "ymin": 29.007108442849102,
-                "xmax": 3.871964247634747,
-                "ymax": 42.65733404196801,
-                "spatialReference": {
-                    "wkid": 4326
-                }
-            },
-            "drawingInfo": {
-                "renderer": {
-                    "type": "simple",
-                    "symbol": {
-                        "type": "esriPMS",
-                        "url": "blue_small_dot.png",
-                        "contentType": "image/png",
-                        "width": 9.75,
-                        "height": 9.75,
-                        "xoffset": 0,
-                        "yoffset": 0,
-                        "angle": 0,
-                        "imageData": "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAA9UlEQVQYV42QQU7DMBBFx3aCnRSJBomuuvAGwZLehNyA3qBX6Ak4Qk9QpTcp+2686AoqGiSa2MQeozhNJSoWnYWtsb7/n3kEjiWL/VCgewbwsnsiSlO2UnlWhq497ov3pxhYcZtyOeBRkB2Mhc/KqAZcvslHb6R1SgHX4+FA8oj1AeE21sG2PKgK6IQ8LncvN8nVIkv5H1Hf7CsDX/XPlDwsP17vrpPZuVsvbF133/U8CLOEz+KI/uvYWISyNvMQLWK2EGfz9b+0daAbNw3LCO/WImKSkgDhVOg9aOuUJmxywsOQFpQSSTtigOAB0StHscNzKfBfZkltaaUCjW0AAAAASUVORK5CYII="
-                    },
-                    "label": "",
-                    "description": ""
-                },
-                "transparency": 0,
-                "labelingInfo": null
-            },
-            "objectIdField": "OBJECTID",
-            "fields": [
-                {
-                    "name": "OBJECTID",
-                    "type": "esriFieldTypeOID",
-                    "alias": "OBJECTID",
-                    "sqlType": "sqlTypeOther",
-                    "nullable": false,
-                    "editable": false,
-                    "domain": null,
-                    "defaultValue": null
-                },
-                {
-                    "name": "Speed",
-                    "type": "esriFieldTypeDouble",
-                    "alias": "Speed",
-                    "sqlType": "sqlTypeNVarchar",
-                    "nullable": true,
-                    "editable": true,
-                    "domain": null,
-                    "defaultValue": null,
-                    "length": 256
-                },
-                {
-                    "name": "Date",
-                    "type": "esriFieldTypeDate",
-                    "alias": "Date of the fine",
-                    "sqlType": "sqlTypeNVarchar",
-                    "nullable": true,
-                    "editable": true,
-                    "domain": null,
-                    "defaultValue": null,
-                    "length": 256
-                },
-                {
-                    "name": "License",
-                    "type": "esriFieldTypeString",
-                    "alias": "License number",
-                    "sqlType": "sqlTypeNVarchar",
-                    "nullable": true,
-                    "editable": true,
-                    "domain": null,
-                    "defaultValue": null,
-                    "length": 256
-                }
-            ],
-            "templates": [
-                {
-                    "name": "New Feature",
-                    "description": "",
-                    "drawingTool": "esriFeatureEditToolPoint",
-                    "prototype": {
-                        "attributes": {
-                            "Speed": null,
-                            "Date": null,
-                            "License": null
-                        }
-                    }
-                }
-            ],
-            "supportedQueryFormats": "JSON",
-            "hasStaticData": false,
-            "maxRecordCount": 10000,
-            "capabilities": "Query,Editing,Create,Update,Delete"
-        };
-
-        if(options.layerName){
-            defaultLayer.name = options.layerName;
-        }
-
-        if(options.fields){
-            defaultLayer.fields = options.fields;
-
-            attributes = {};
-            for (key in options.fields) {
-                if (options.fields.hasOwnProperty(key)) {
-                    attributes[options.fields[key].name] = null;
-                }
-            }
-            defaultLayer.templates.prototype = attributes
-        }
-
-        return defaultLayer;
-    };
-
-    /************************************************************
-     *
-     *   This function returns the SQLType for a given EsriType
-     *
-     ************************************************************/
-    this.esriTypeToSqlType = function(esriType){
-        // Perhaps some matches are missing: http://arcg.is/1H1wsUk
-        switch (esriType){
-            case "esriFieldTypeString": return "sqlTypeNVarchar";
-            case "esriFieldTypeDouble": return "sqlTypeDecimal";
-            case "esriFieldTypeInteger": return "sqlTypeInteger";
-            default: return "sqlTypeOther";
-        }
-
-    };
-
-    /************************************************************
-     *
-     *   This function returns a JSON object with a layer definition field
-     *
-     ************************************************************/
-    this.createField = function(o){
-        var f = {
-            "name": "name",
-            "type": "esriFieldTypeString",
-            "alias": "name",
-            "sqlType": that.esriTypeToSqlType('esriFieldTypeString'),
-            "nullable": true,
-            "editable": true,
-            "domain": null,
-            "defaultValue": null
-        };
-
-        if(f.type === "esriFieldTypeString"){
-            f.length = 255
-        }
-
-        if(o.name){ f.name = o.name; f.alias = o.name;}
-        if(o.type){ f.type = o.type; f.sqlType = that.esriTypeToSqlType(o.type)}
-        if(o.alias){f.alias = o.alias;}
-        if(o.nullable){f.nullable= o.nullable;}
-        if(o.editable){f.editable= o.editable;}
-        if(o.domain){f.domain= o.domain;}
-        if(o.defaultValue){f.defaultValue= o.defaultValue;}
-        if(o.length){f.length = o.length;}
-        if(o.domain){f.domain = o.domain;}
-
-        return f;
 
     };
 

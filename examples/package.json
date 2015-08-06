@@ -8,6 +8,7 @@
         "url": "http://desarrolladores.esri.es"
     },
     "dependencies": {
-        "arc-node": "0.2.5"
+        "arc-node": "0.2.9",
+        "arcgis-json-objects": "0.0.5"
     }
 }
