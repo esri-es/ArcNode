@@ -24,7 +24,7 @@ module.exports = function ArcNode(options) {
 
     /************************************************************
      *
-     *   This function renews the instance token for 15 days
+     *   This function renews the instance token and returns the token
      *
      ************************************************************/
     this.getToken = function(options){

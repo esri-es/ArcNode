@@ -70,7 +70,7 @@ service.checkIfFSExists( { serviceName: serviceName } ).then(function(response){
 });
 
 
-var addLayers = function(serviceURL, layers){
+var addLayersaddLayers = function(serviceURL, layers){
     service.addLayersToFS({
         service: serviceURL,
         layers: layers
