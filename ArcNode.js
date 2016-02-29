@@ -8,7 +8,7 @@ var querystring = require('querystring');
 var ArcJSON = require('arcgis-json-objects');
 var https = require('https');
 var http = require('http');
-//var StringDecoder = require('string_decoder').StringDecoder;
+var StringDecoder = require('string_decoder').StringDecoder;
 
 module.exports = function ArcNode(options) {
     options = options || {};
@@ -24,7 +24,7 @@ module.exports = function ArcNode(options) {
 
     /************************************************************
      *
-     *   This function renews the instance token and returns the token
+     *   This function renews the instance token for 15 days
      *
      ************************************************************/
     this.getToken = function(options){
@@ -74,7 +74,54 @@ module.exports = function ArcNode(options) {
 
     /************************************************************
      *
-     *   This function gets a new token valid for 15 days
+     *   This function gets user info, if admin token is passed
+     *   it will return private user info as email, groups, etc
+     *
+     ************************************************************/
+    this.getUserInfo = function(options){
+        var deferred = defer(),
+            req, obj="", decoder, textChunk;
+
+        options = options || {};
+        options.token = options.token || that.token;
+        options.username = options.username || that.username;
+
+        var url = "https://" + that.root_url+"/sharing/rest/community/users/" + options.username + "?f=json&token=" + that.token;
+
+        req = https.get(url, function(res) {
+            res.on("data", function(chunk) {
+                
+                res.setEncoding('utf8');    
+
+                decoder = new StringDecoder('utf8');
+                textChunk = decoder.write(chunk);
+
+                obj += textChunk;
+
+                if(chunk.error && chunk.error.code == 498){
+                    that.getToken().then(function(response){
+                        that.getUserInfo(options).then(function(user){
+                            deferred.resolve(user);
+                        });
+                    }, function(e) {
+                        deferred.reject(e.message);
+                    });
+                }
+            });
+            res.on("end", function(chunk) {
+              obj = JSON.parse(obj);
+              deferred.resolve(obj);
+            });
+        }).on('error', function(e) {
+            deferred.reject(e.message);
+        });
+        req.end();
+        return deferred;
+    };
+
+    /************************************************************
+     *
+     *   This function checks if s feature service exists
      *
      ************************************************************/
     this.checkIfFSExists = function(options){
@@ -205,6 +252,65 @@ module.exports = function ArcNode(options) {
 
     /************************************************************
      *
+     *   This methods gets some features to a given layer in a
+     *   feature service.
+     *
+     ************************************************************/
+    this.getFeatures = function (options) {
+
+        var req, deferred, path, requestOptions, postData, decoder, textChunk, obj, query;
+
+        deferred = defer();
+
+        query = options.query;
+
+        if(!query.hasOwnProperty('token')){
+          query.token = that.token;
+        }
+
+        query = Object.keys(query).map(function(k) {
+            return encodeURIComponent(k) + '=' + encodeURIComponent(query[k])
+        }).join('&');
+
+        path = "https://"+that.services_url+"/" + that.account_id + "/arcgis/rest/services/"+ options.serviceName + "/FeatureServer/" + options.layer+"/query?"+query;
+        obj = "";
+        req = https.get(path, function (res) {
+            res.on('data', function (chunk) {
+                res.setEncoding('utf8');    
+
+                decoder = new StringDecoder('utf8');
+                textChunk = decoder.write(chunk);
+
+                obj += textChunk;
+                //console.log("Recibida trama, textChunk=",textChunk);
+
+                if (chunk.error && chunk.error.code == 498) {
+                    //console.log("Error: invalid token");
+                    that.getToken().then(function(){
+                        that.getFeatures(options);
+                    });
+                }
+            });
+            res.on('end', function (chunk) {
+              //console.log("terminado, chunk=",chunk);
+              obj = JSON.parse(obj);
+              deferred.resolve(obj);
+                              //
+
+            });
+        }).on('error', function (e) {
+            console.log('Problem with request: ', e.message);
+            deferred.reject(e);
+        });
+
+        req.end();
+
+        return deferred.promise;
+        
+    },
+
+    /************************************************************
+     *
      *   This methods adds some features to a given layer in a
      *   feature service.
      *
@@ -247,6 +353,69 @@ module.exports = function ArcNode(options) {
                     //console.log("Error: invalid token");
                     that.getToken().then(function(){
                         that.addFeatures(options);
+                    });
+                } else {
+                    deferred.resolve(chunk);
+                }
+            });
+        });
+
+        req.on('error', function (e) {
+            console.log('Problem with request: ', e.message);
+            deferred.reject(e);
+        });
+
+        req.write(postData);
+
+        req.end();
+
+        return deferred;
+    },
+
+    /************************************************************
+     *
+     *   This methods update some features to a given layer in a
+     *   feature service.
+     *
+     ************************************************************/
+    this.updateFeatures = function (options) {
+
+        var req, deferred, path, requestOptions, postData;
+
+        deferred = defer();
+
+        postData = querystring.stringify({
+            f: 'json',
+            features: JSON.stringify(options.features),
+            token: that.token
+        });
+
+        path = "/" + that.account_id + "/arcgis/rest/services/"+ options.serviceName + "/FeatureServer/" + options.layer+"/updateFeatures?token=" + that.token;
+
+        requestOptions = {
+            host: that.services_url,
+            path: path,
+            method: 'POST',
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded",
+                'Content-Length': postData.length
+            }
+        };
+
+        req = http.request(requestOptions, function (response) {
+            response.setEncoding('utf8');
+
+            response.on('data', function (chunk) {
+                chunk = JSON.parse(chunk);
+                if(typeof chunk === "string"){
+
+                }
+
+                if (chunk.error && chunk.error.code == 498) {
+                    //console.log("Error: invalid token");
+                    that.getToken().then(function(){
+                        that.updateFeatures(options);
                     });
                 } else {
                     deferred.resolve(chunk);
