@@ -3,5 +3,9 @@
     "password":       "<Your password>",
     "account_id":     "<Your account ID, from: http://services.arcgis.com/Q6ZFRRvMTlsTTFuP/arcgis/rest/services/... would be Q6ZFRRvMTlsTTFuP>",
     "root_url":       "<In case you are using ArcGIS Online: www.arcgis.com, or your Portal's domain>",
-    "services_url":   "<Domain where your services are hosted. Would be services.arcgis.com if you are using ArcGIS Online>"
+    "services_url":   "<Domain where your services are hosted. Would be services.arcgis.com if you are using ArcGIS Online>",
+    "arcgisPath":       "<If using Arcgis Online leave it empty, if not default is: arcgis>",
+    "portalPath":       "<If using Arcgis Online leave it empty, if not default is: portal>",
+    "port":             <Default: 443, portal uses 7443>,
+    "allowSelfSigned":  <Default: false; true if self signed certificates are valid>,
 }

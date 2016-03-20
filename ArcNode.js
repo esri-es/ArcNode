@@ -17,6 +17,11 @@ module.exports = function ArcNode(options) {
     this.account_id =   options.account_id || "";
     this.root_url =     options.root_url || "";
     this.services_url = options.services_url || "";
+    this.port =         options.port || 443;
+    this.arcgisPath =   options.arcgisPath || "";
+    this.portalPath =   options.portalPath || "";
+    this.allowSelfSigned = options.allowSelfSigned || false;
+    
     this.print_service = options.print_service || "http://sampleserver6.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task";
     this.find_address_candidates_service = options.find_address_candidates_service || "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates";
     var that = this;
@@ -45,17 +50,23 @@ module.exports = function ArcNode(options) {
             expiration: options.expiration
         });
 
-
-        var req = https.request({
+        if(that.allowSelfSigned){
+            process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+        }
+        
+        var req = {
             hostname: that.root_url,
-            path: "/sharing/rest/generateToken",
+            port: that.port,
+            path: "/" + that.arcgisPath + "/sharing/rest/generateToken",
             method: 'POST',
             body: postData,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Content-Length': postData.length
             }
-        }, function(response) {
+        };
+        //console.log('req = ', req);
+        var req = https.request(req, function(response) {
             response.setEncoding('utf8');
             response.on('data', function (chunk) {
                 chunk = JSON.parse(chunk);
@@ -86,8 +97,8 @@ module.exports = function ArcNode(options) {
         options.token = options.token || that.token;
         options.username = options.username || that.username;
 
-        var url = "https://" + that.root_url+"/sharing/rest/community/users/" + options.username + "?f=json&token=" + that.token;
-
+        var url = "https://" + that.root_url+"/"+that.portalPath+"/sharing/rest/community/users/" + options.username + "?f=json&token=" + that.token;
+        //console.log('url = ', url);
         req = https.get(url, function(res) {
             res.on("data", function(chunk) {
                 
@@ -223,7 +234,7 @@ module.exports = function ArcNode(options) {
 
         optionsReq = {
             host: host,
-            path: path,
+            path: encodeURI(path),
             method: 'POST',
             headers: {
                 "Accept": "application/json",
@@ -272,8 +283,15 @@ module.exports = function ArcNode(options) {
             return encodeURIComponent(k) + '=' + encodeURIComponent(query[k])
         }).join('&');
 
-        path = "https://"+that.services_url+"/" + that.account_id + "/arcgis/rest/services/"+ options.serviceName + "/FeatureServer/" + options.layer+"/query?"+query;
-        obj = "";
+        if(options.serviceName && options.layer){
+            path = 'https://'+that.services_url+'/' + that.account_id + '/arcgis/rest/services/'+ options.serviceName + '/FeatureServer/' + options.layer;    
+        }else if(options.serviceUrl){
+            path = options.serviceUrl;
+        }
+        path += '/query?' + query;
+        
+        obj = '';
+        //console.log('path=',path);
         req = https.get(path, function (res) {
             res.on('data', function (chunk) {
                 res.setEncoding('utf8');    
@@ -295,8 +313,6 @@ module.exports = function ArcNode(options) {
               //console.log("terminado, chunk=",chunk);
               obj = JSON.parse(obj);
               deferred.resolve(obj);
-                              //
-
             });
         }).on('error', function (e) {
             console.log('Problem with request: ', e.message);
@@ -327,7 +343,12 @@ module.exports = function ArcNode(options) {
             token: that.token
         });
 
-        path = "/" + that.account_id + "/arcgis/rest/services/"+ options.serviceName + "/FeatureServer/" + options.layer+"/addFeatures?token=" + that.token;
+        if(options.serviceName && options.layer){
+            path = "/" + that.account_id + "/arcgis/rest/services/"+ options.serviceName + "/FeatureServer/" + options.layer;
+        }else if(options.serviceUrl){
+            path = options.serviceUrl;
+        }
+        path += "/addFeatures?token=" + that.token;
 
         requestOptions = {
             host: that.services_url,
@@ -390,11 +411,19 @@ module.exports = function ArcNode(options) {
             token: that.token
         });
 
-        path = "/" + that.account_id + "/arcgis/rest/services/"+ options.serviceName + "/FeatureServer/" + options.layer+"/updateFeatures?token=" + that.token;
+        if(options.serviceName && options.layer){
+            path = "/" + that.account_id + "/arcgis/rest/services/"+ options.serviceName + "/FeatureServer/" + options.layer;    
+        }else if(options.serviceUrl){
+            //path = options.serviceUrl;
+            path = options.serviceUrl.split("/");
+            path = path.splice(3);
+            path = '/' + path.join("/");
+        }
+        path += "/updateFeatures?token=" + that.token;
 
         requestOptions = {
             host: that.services_url,
-            path: path,
+            path: encodeURI(path),
             method: 'POST',
             headers: {
                 "Accept": "application/json",
@@ -402,6 +431,8 @@ module.exports = function ArcNode(options) {
                 'Content-Length': postData.length
             }
         };
+        
+        //console.log('requestOptions = ',requestOptions);
 
         req = http.request(requestOptions, function (response) {
             response.setEncoding('utf8');

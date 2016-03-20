@@ -1,14 +1,14 @@
 {
-    "name": "arc-node-examples",
-    "version": "0.0.1",
-    "description": "Thoses are the dependencies to be able to run the examples",
-    "author": {
-        "name": "Raul Jimenez Ortega",
-        "email": "raul.jimenez@esri.es",
-        "url": "http://desarrolladores.esri.es"
-    },
-    "dependencies": {
-        "arc-node": "0.2.9",
-        "arcgis-json-objects": "0.0.6"
-    }
+  "name": "arc-node-examples",
+  "version": "0.0.1",
+  "description": "Thoses are the dependencies to be able to run the examples",
+  "author": {
+    "name": "Raul Jimenez Ortega",
+    "email": "raul.jimenez@esri.es",
+    "url": "http://desarrolladores.esri.es"
+  },
+  "dependencies": {
+    "arc-node": "^0.3.0",
+    "arcgis-json-objects": "0.0.6"
+  }
 }
