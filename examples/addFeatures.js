@@ -2,7 +2,7 @@ var config = require('./config'),
     ArcNode = require('arc-node'),
     service = new ArcNode(config),
     ArcJSON = require('arcgis-json-objects'),
-    serviceName = "Test service",
+    serviceName = "Test service (with features)",
     fields, layer, serviceURL, data;
 
 
@@ -20,7 +20,7 @@ fields = [
 ];
 
 layer = ArcJSON.featureLayer({
-    layerName: "My new layer",
+    name: "My new layer",
     fields: fields
 });
 
@@ -66,7 +66,7 @@ service.checkIfFSExists( { serviceName: serviceName } ).then(function(response){
     }
 
 },function(e){
-    console.log("Error: ", e);
+    console.log("Error checking if feature service exists: ", e);
 });
 
 
@@ -84,9 +84,9 @@ var addLayers = function(serviceURL, layers){
         }).then(function(response){
             console.log("Features added\nresponse = ", JSON.stringify(response, null, "\t"));
         },function(e){
-            console.log("Error: ", e);
+            console.log("Error adding features: ", e);
         });
     },function(e){
-        console.log("Error: ", e);
+        console.log("Error adding layer: ", e);
     });
 };

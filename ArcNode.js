@@ -216,10 +216,11 @@ module.exports = function ArcNode(options) {
      ************************************************************/
     this.addLayersToFS = function(options){
 
-        var host, path, postData, deferred, optionsReq, req, aux;
+        var host, path, postData, deferred, optionsReq, req, aux, decoder, textChunk, obj = '';
 
         deferred = defer();
 
+        options.service = decodeURI(options.service);
         aux = options.service.split("/");
         host = aux[2];
         aux.shift(); aux.shift(); aux.shift(); aux.pop();
@@ -245,11 +246,37 @@ module.exports = function ArcNode(options) {
 
         req = http.request(optionsReq, function(res) {
             res.on("data", function(chunk) {
-                chunk = JSON.parse(chunk);
-                if(chunk.code == 400){
-                    console.log("Error:=",chunk)
+                
+                res.setEncoding('utf8');    
+
+                decoder = new StringDecoder('utf8');
+                textChunk = decoder.write(chunk);
+
+                obj += textChunk;
+
+                if(chunk.error && chunk.error.code == 498){
+                    that.getToken().then(function(response){
+                        that.getUserInfo(options).then(function(user){
+                            deferred.resolve(user);
+                        });
+                    }, function(e) {
+                        deferred.reject(e.message);
+                    });
                 }
-                deferred.resolve(chunk);
+            });
+            res.on("end", function(chunk) {
+                try{
+                    obj = JSON.parse(obj);
+                    if(obj.code == 400){
+                        console.log("Error: ",obj);
+                    }
+                    deferred.resolve(obj);
+                }catch(e){
+                    console.log("optionsReq: ", optionsReq);
+                    console.log("Error: ", obj);
+                    deferred.reject(e.message);
+                }
+                
             });
         }).on('error', function(e) {
             deferred.reject(e.message);
@@ -333,7 +360,7 @@ module.exports = function ArcNode(options) {
      ************************************************************/
     this.addFeatures = function (options) {
 
-        var req, deferred, path, requestOptions, postData;
+        var req, deferred, path, requestOptions, postData, decoder, textChunk, obj = '';
 
         deferred = defer();
 
@@ -343,11 +370,13 @@ module.exports = function ArcNode(options) {
             token: that.token
         });
 
-        if(options.serviceName && options.layer){
+        if(options.serviceName && options.layer != undefined){
             path = "/" + that.account_id + "/arcgis/rest/services/"+ options.serviceName + "/FeatureServer/" + options.layer;
         }else if(options.serviceUrl){
             path = options.serviceUrl;
         }
+
+        path = decodeURI(path);
         path += "/addFeatures?token=" + that.token;
 
         requestOptions = {
@@ -360,25 +389,49 @@ module.exports = function ArcNode(options) {
                 'Content-Length': postData.length
             }
         };
+        
+        req = http.request(requestOptions, function (res) {
+            res.setEncoding('utf8');
 
-        req = http.request(requestOptions, function (response) {
-            response.setEncoding('utf8');
+            res.on("data", function(chunk) {
+                
+                res.setEncoding('utf8');    
 
-            response.on('data', function (chunk) {
-                chunk = JSON.parse(chunk);
-                if(typeof chunk === "string"){
+                decoder = new StringDecoder('utf8');
+                textChunk = decoder.write(chunk);
 
-                }
+                obj += textChunk;
 
-                if (chunk.error && chunk.error.code == 498) {
-                    //console.log("Error: invalid token");
-                    that.getToken().then(function(){
-                        that.addFeatures(options);
+                if(chunk.error && chunk.error.code == 498){
+                    that.getToken().then(function(response){
+                        that.getUserInfo(options).then(function(user){
+                            deferred.resolve(user);
+                        });
+                    }, function(e) {
+                        deferred.reject(e.message);
                     });
-                } else {
-                    deferred.resolve(chunk);
                 }
             });
+            res.on("end", function(chunk) {
+                try{
+                    chunk = JSON.parse(obj);
+
+                    if (chunk.error && chunk.error.code == 498) {
+                        //console.log("Error: invalid token");
+                        that.getToken().then(function(){
+                            that.addFeatures(options);
+                        });
+                    } else {
+                        deferred.resolve(chunk);
+                    }
+                }catch(e){
+                    console.log("requestOptions: ", requestOptions);
+                    console.log("Error: ", obj);
+                    deferred.reject(e.message);
+                }
+                
+            });
+            
         });
 
         req.on('error', function (e) {

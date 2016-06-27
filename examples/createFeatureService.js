@@ -1,7 +1,7 @@
 var config = require('./config'),
     ArcNode = require('arc-node'),
     service = new ArcNode(config),
-    serviceName = "Test service";
+    serviceName = "Test service (without layers)";
 
 service.checkIfFSExists( { serviceName: serviceName } ).then(function(response) {
     if(response.available) {
