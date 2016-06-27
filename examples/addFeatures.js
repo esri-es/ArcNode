@@ -60,7 +60,7 @@ service.checkIfFSExists( { serviceName: serviceName } ).then(function(response){
     }else{
 
       console.log("Service already exists: ", response);
-      serviceURL = "http://" + config.services_url + "/" + config.account_id + "/arcgis/rest/services/" + encodeURIComponent(serviceName)+ "/FeatureServer"
+      serviceURL = "http://" + config.services_url + "/" + config.account_id + "/arcgis/rest/services/" + serviceName+ "/FeatureServer"
       addLayers(serviceURL, [layer]);
 
     }
@@ -70,7 +70,7 @@ service.checkIfFSExists( { serviceName: serviceName } ).then(function(response){
 });
 
 
-var addLayersaddLayers = function(serviceURL, layers){
+var addLayers = function(serviceURL, layers){
     service.addLayersToFS({
         service: serviceURL,
         layers: layers
