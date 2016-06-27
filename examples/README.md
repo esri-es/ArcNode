@@ -18,3 +18,5 @@ And finally run any of the examples like this ```node <script_name>```:
 ```node addLayerToFS.js```
 
 ```node addFeatures.js```
+
+```node getFeatures.js```
