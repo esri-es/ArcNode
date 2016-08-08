@@ -1,5 +1,6 @@
 .idea/
 *.iml
 examples/config.json
+examples/npm-debug.log
 node_modules
 test.js
