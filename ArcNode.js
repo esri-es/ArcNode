@@ -66,7 +66,7 @@ module.exports = function ArcNode(options) {
             }
         };
         //console.log('req = ', req);
-        req = req.replace('http://', 'https://');
+        
         req = https.request(req, function(response) {
             response.setEncoding('utf8');
             response.on('data', function (chunk) {
