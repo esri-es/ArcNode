@@ -66,7 +66,8 @@ module.exports = function ArcNode(options) {
             }
         };
         //console.log('req = ', req);
-        var req = https.request(req, function(response) {
+        req = req.replace('http://', 'https://');
+        req = https.request(req, function(response) {
             response.setEncoding('utf8');
             response.on('data', function (chunk) {
                 chunk = JSON.parse(chunk);
@@ -318,6 +319,8 @@ module.exports = function ArcNode(options) {
         path += '/query?' + query;
         
         obj = '';
+        
+        path = path.replace('http://', 'https://');
         //console.log('path=',path);
         req = https.get(path, function (res) {
             res.on('data', function (chunk) {
@@ -618,6 +621,7 @@ module.exports = function ArcNode(options) {
             }).join('&');
 
             path = this.find_address_candidates_service + "?" + query;
+            path = path.replace('http://', 'https://');
             https.get(path, function(response) {
 
                 response.setEncoding('utf8');
