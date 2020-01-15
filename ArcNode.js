@@ -22,7 +22,7 @@ module.exports = function ArcNode(options) {
   this.portalPath =   options.portalPath || '';
   this.allowSelfSigned = options.allowSelfSigned || false;
 
-  this.print_service = options.print_service || 'http://sampleserver6.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task';
+  this.print_service = options.print_service || 'http://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task';
   this.find_address_candidates_service = options.find_address_candidates_service || 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates';
   var that = this;
 
@@ -76,7 +76,7 @@ module.exports = function ArcNode(options) {
         }catch(e){
           console.log("Error: ", e);
         }
-        
+
         deferred.resolve(chunk);
       }).on('error', function(e) {
         deferred.reject(e.message);
@@ -148,7 +148,7 @@ module.exports = function ArcNode(options) {
     var url = 'https://' + that.root_url+'/sharing/rest/portals/' + that.account_id+'/isServiceNameAvailable?name=' + options.serviceName+'&f=json&type=Feature Service&token=' + that.token;
 
     req = https.get(url, function(res) {
-      res.on('data', function(chunk) {        
+      res.on('data', function(chunk) {
         try{
           chunk = JSON.parse(chunk);
         }catch(e){
@@ -578,7 +578,7 @@ module.exports = function ArcNode(options) {
       response.setEncoding('utf8');
 
       response.on('data', function (chunk) {
-        
+
         try{
           chunk = JSON.parse(chunk);
         }catch(e){
